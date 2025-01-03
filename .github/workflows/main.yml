@@ -1,5 +1,4 @@
 name: Sync to Hugging Face hub
-
 on:
   push:
     branches: [main]
@@ -23,7 +22,7 @@ jobs:
       - name: Fetch from hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: git fetch https://reichaves:$HF_TOKEN@https://huggingface.co/spaces/reichaves/Chatbot-with-MaritacaAI-for-PDFs main
+        run: git fetch https://reichaves:$HF_TOKEN@huggingface.co/spaces/reichaves/Chatbot-with-MaritacaAI-for-PDFs main
 
       - name: Merge changes
         run: |
@@ -40,4 +39,4 @@ jobs:
       - name: Push to hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: git push https://reichaves:$HF_TOKEN@https://huggingface.co/spaces/reichaves/Chatbot-with-MaritacaAI-for-PDFs main
+        run: git push https://reichaves:$HF_TOKEN@huggingface.co/spaces/reichaves/Chatbot-with-MaritacaAI-for-PDFs main
