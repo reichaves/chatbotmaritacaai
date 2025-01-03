@@ -6,27 +6,38 @@
 # Embeddings de texto usando o modelo all-MiniLM-L6-v2 do Hugging Face
 ##
 
+"""
+Chatbot com RAG (Retrieval Augmented Generation) para PDFs usando MaritacaAI
 
-import streamlit as st
-import os
-import tempfile
-from typing import List, Dict, Any, Optional
-from tenacity import retry, stop_after_attempt, wait_exponential
-from cachetools import TTLCache
-import logging
-from datetime import datetime
+Este script implementa um chatbot que pode analisar documentos PDF usando:
+- Streamlit para interface web
+- LangChain para processamento de documentos e gerenciamento de chat
+- Modelo sabia-3 da Maritaca AI para geração de respostas em Português
+- Embeddings do Hugging Face para processamento de texto
 
-# Configurar logging
+"""
+
+# Importação das bibliotecas principais
+import streamlit as st  # Framework para interface web
+import os  # Operações do sistema operacional
+import tempfile  # Manipulação de arquivos temporários
+from typing import List, Dict, Any, Optional  # Tipos para type hints
+from tenacity import retry, stop_after_attempt, wait_exponential  # Gerenciamento de retentativas
+from cachetools import TTLCache  # Cache com tempo de vida
+import logging  # Sistema de logging
+from datetime import datetime  # Manipulação de datas
+
+# Configuração do sistema de logging para debug e monitoramento
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
 
-# Configurar ambiente
+# Desativa paralelismo dos tokenizers para evitar deadlocks
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
-# Imports do LangChain
+# Importações do LangChain para processamento de documentos e chat
 from langchain.chains import create_history_aware_retriever, create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_community.chat_message_histories import ChatMessageHistory
@@ -40,21 +51,31 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.runnables import Runnable
 from maritalk import MariTalk
 
-# Cache para embeddings
-embeddings_cache = TTLCache(maxsize=100, ttl=3600)
+# Cache para armazenar embeddings e melhorar performance
+embeddings_cache = TTLCache(maxsize=100, ttl=3600)  # Cache por 1 hora
 
 class MariTalkWrapper(Runnable):
-    """Wrapper para o modelo MariTalk compatível com LangChain"""
+    """
+    Wrapper para integrar o modelo MaritacaAI com o LangChain.
+    Gerencia a comunicação com a API e formata mensagens.
+    """
     
     def __init__(self, maritalk_model: Any, max_retries: int = 3, timeout: int = 30):
+        """
+        Inicializa o wrapper com configurações de retry e timeout
+        """
         self.maritalk_model = maritalk_model
         self.max_retries = max_retries
         self.timeout = timeout
 
     @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
     def invoke(self, input: Any, config: Optional[Dict] = None) -> str:
+        """
+        Processa entrada e gera resposta, com retries automáticos em caso de falha.
+        Suporta diferentes formatos de entrada: ChatPromptValue, dict, string
+        """
         try:
-            # Lidar com ChatPromptValue
+            # Processamento de ChatPromptValue (formato LangChain)
             if hasattr(input, "to_messages"):
                 messages = input.to_messages()
                 formatted_messages = self._format_messages(messages)
@@ -66,7 +87,7 @@ class MariTalkWrapper(Runnable):
                 else:
                     return response[0]['content'] if isinstance(response, list) else str(response)
             
-            # Lidar com dicionário
+            # Processamento de dicionário
             elif isinstance(input, dict):
                 if "messages" in input:
                     messages = input["messages"]
@@ -83,7 +104,7 @@ class MariTalkWrapper(Runnable):
                 else:
                     return self._process_text(str(input))
             
-            # Lidar com string
+            # Processamento de string simples
             elif isinstance(input, str):
                 return self._process_text(input)
             
@@ -97,6 +118,10 @@ class MariTalkWrapper(Runnable):
             raise
 
     def _format_messages(self, messages: List[Any]) -> List[Dict[str, str]]:
+        """
+        Formata mensagens para o formato esperado pela API da Maritaca
+        Converte entre formatos LangChain e Maritaca
+        """
         formatted = []
         for msg in messages:
             role = "user"
@@ -117,6 +142,10 @@ class MariTalkWrapper(Runnable):
         return formatted
 
     def _process_text(self, text: str) -> str:
+        """
+        Processa texto simples através do modelo Maritaca
+        Gerencia diferentes formatos de resposta possíveis
+        """
         response = self.maritalk_model.generate([{"role": "user", "content": text}])
         if isinstance(response, str):
             return response
@@ -128,6 +157,10 @@ class MariTalkWrapper(Runnable):
             return str(response)
 
 def init_page_config():
+    """
+    Inicializa a configuração da página Streamlit
+    Define título, layout e ícone
+    """
     st.set_page_config(
         page_title="Chatbot com IA especializada em Português do Brasil - entrevista PDFs",
         layout="wide",
@@ -136,12 +169,19 @@ def init_page_config():
     )
 
 def apply_custom_css():
+    """
+    Aplica estilos CSS personalizados à interface
+    Define cores, formatos e layout dos elementos
+    """
     st.markdown("""
     <style>
+    /* Estilo global e tema dark */
     .stApp {
         background-color: #0e1117;
         color: #fafafa;
     }
+    
+    /* Formatação das mensagens do chat */
     .chat-message {
         padding: 1rem;
         border-radius: 0.5rem;
@@ -156,6 +196,8 @@ def apply_custom_css():
     .assistant-message {
         background-color: #1e1e1e;
     }
+    
+    /* Elementos do chat */
     .chat-header {
         font-weight: bold;
         margin-bottom: 0.5rem;
@@ -172,6 +214,8 @@ def apply_custom_css():
         border-top: 1px solid #444;
         padding-top: 8px;
     }
+    
+    /* Elementos da interface */
     .main-title {
         color: #FFA500;
         font-size: 2.5em;
@@ -184,12 +228,16 @@ def apply_custom_css():
         border-radius: 20px;
         padding: 10px 20px;
     }
+    
+    /* Esconde elementos desnecessários */
     div[data-testid="stToolbar"] {
         display: none;
     }
     .stDeployButton {
         display: none;
     }
+    
+    /* Informações de tokens */
     .token-info {
         font-style: italic;
         color: #888;
@@ -201,6 +249,10 @@ def apply_custom_css():
     """, unsafe_allow_html=True)
 
 def create_sidebar():
+    """
+    Cria a barra lateral com instruções e informações importantes
+    Inclui links para obtenção de API keys e avisos
+    """
     st.sidebar.markdown("## Orientações")
     st.sidebar.markdown("""
     * Se encontrar erros de processamento, reinicie com F5. Utilize arquivos .PDF com textos não digitalizados como imagens.
@@ -210,32 +262,41 @@ def create_sidebar():
     * Você pode fazer uma conta na MaritacaAI e obter uma chave de API [aqui](https://plataforma.maritaca.ai/)
     * Você pode fazer uma conta no Hugging Face e obter o token de API Hugging Face [aqui](https://huggingface.co/docs/hub/security-tokens)
 
-    **Atenção:** Os documentos que você compartilhar com o modelo de IA generativa podem ser usados pelo LLM para treinar o sistema. Portanto, evite compartilhar documentos PDF que contenham:
+    **Atenção:** Os documentos que você compartilhar com o modelo de IA generativa podem ser usados pelo LLM para treinar o sistema. 
+    Portanto, evite compartilhar documentos PDF que contenham:
     1. Dados bancários e financeiros
     2. Dados de sua própria empresa
     3. Informações pessoais
     4. Informações de propriedade intelectual
     5. Conteúdos autorais
 
-    E não use IA para escrever um texto inteiro! O auxílio é melhor para gerar resumos, filtrar informações ou auxiliar a entender contextos - que depois devem ser checados. Inteligência Artificial comete erros (alucinações, viés, baixa qualidade, problemas éticos)!
+    E não use IA para escrever um texto inteiro! O auxílio é melhor para gerar resumos, filtrar informações ou auxiliar a 
+    entender contextos - que depois devem ser checados. Inteligência Artificial comete erros (alucinações, viés, baixa qualidade, 
+    problemas éticos)!
 
     Este projeto não se responsabiliza pelos conteúdos criados a partir deste site.
 
     **Sobre este app**
-    Este aplicativo foi desenvolvido por Reinaldo Chaves. Para mais informações, contribuições e feedback, visite o [repositório](https://github.com/reichaves/chatbotmaritacaai)
+    Este aplicativo foi desenvolvido por Reinaldo Chaves. Para mais informações, contribuições e feedback, visite o 
+    [repositório](https://github.com/reichaves/chatbotmaritacaai)
     """)
 
 def display_chat_message(message: str, is_user: bool):
+    """
+    Exibe uma mensagem no chat
+    Formata diferentemente mensagens do usuário e do assistente
+    Inclui contagem de tokens para respostas do assistente
+    """
     class_name = "user-message" if is_user else "assistant-message"
     role = "Você" if is_user else "Assistente"
     
-    # Se for resposta do assistente, extrair e formatar o texto
+    # Formata resposta do assistente
     if not is_user:
         if isinstance(message, dict):
             content = message.get('answer', str(message))
             tokens = message.get('usage', {}).get('total_tokens', None)
             
-            # Substituir \n por <br> para quebras de linha HTML
+            # Quebras de linha em HTML
             content = content.replace('\n', '<br>')
             
             if tokens:
@@ -245,6 +306,7 @@ def display_chat_message(message: str, is_user: bool):
     else:
         content = message
     
+    # Renderiza mensagem com HTML
     st.markdown(f"""
         <div class="chat-message {class_name}">
             <div class="chat-header">{role}:</div>
@@ -253,17 +315,24 @@ def display_chat_message(message: str, is_user: bool):
     """, unsafe_allow_html=True)
 
 def setup_rag_chain(documents: List[Any], llm: Any, embeddings: Any) -> Any:
+    """
+    Configura a chain RAG (Retrieval Augmented Generation)
+    Processa documentos e configura sistema de recuperação e resposta
+    """
+    # Divide documentos em chunks menores
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000,
-        chunk_overlap=200,
+        chunk_size=1000,  # Tamanho de cada chunk
+        chunk_overlap=200,  # Sobreposição entre chunks
         length_function=len,
         is_separator_regex=False
     )
     
+    # Cria banco de vetores com FAISS
     splits = text_splitter.split_documents(documents)
     vectorstore = FAISS.from_documents(splits, embeddings)
     retriever = vectorstore.as_retriever()
     
+    # Prompt para contextualização de perguntas
     contextualize_q_prompt = ChatPromptTemplate.from_messages([
         ("system", """
         Você é um assistente especializado em analisar documentos PDF com um contexto jornalístico, 
@@ -303,6 +372,7 @@ def setup_rag_chain(documents: List[Any], llm: Any, embeddings: Any) -> Any:
         ("human", "{input}"),
     ])
     
+    # Prompt para respostas
     qa_prompt = ChatPromptTemplate.from_messages([
         ("system", """
         Você é um assistente especializado em análise de documentos.
@@ -356,48 +426,59 @@ def setup_rag_chain(documents: List[Any], llm: Any, embeddings: Any) -> Any:
         ("human", "{input}"),
     ])
     
+    # Cria chain com histórico
     history_aware_retriever = create_history_aware_retriever(llm, retriever, contextualize_q_prompt)
     question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
     
     return create_retrieval_chain(history_aware_retriever, question_answer_chain)
 
 def process_documents(uploaded_files: List[Any]) -> List[Any]:
+    """
+    Processa arquivos PDF enviados
+    Carrega documentos e mostra progresso
+    """
     documents = []
     progress_bar = st.progress(0)
     
     for i, uploaded_file in enumerate(uploaded_files):
         try:
+            # Cria arquivo temporário
             with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_file:
                 temp_file.write(uploaded_file.getvalue())
                 temp_file_path = temp_file.name
             
+            # Carrega PDF
             loader = PyPDFLoader(temp_file_path)
             docs = loader.load()
             documents.extend(docs)
-            os.unlink(temp_file_path)
+            os.unlink(temp_file_path)  # Remove arquivo temporário
             
+            # Atualiza barra de progresso
             progress_bar.progress((i + 1) / len(uploaded_files))
             
         except Exception as e:
             logger.error(f"Erro ao processar {uploaded_file.name}: {str(e)}")
             st.error(f"Erro ao processar {uploaded_file.name}")
     
-    progress_bar.empty()
+    progress_bar.empty()  # Remove barra de progresso
     return documents
 
 def display_chat_interface():
-    """Exibe a interface do chat com o campo de entrada fixo"""
-    # Container para o histórico do chat
+    """
+    Exibe a interface do chat com campo de entrada fixo
+    Gerencia histórico e entrada do usuário
+    """
+    # Container para histórico do chat
     chat_container = st.container()
     
-    # Container fixo para o campo de entrada
+    # Container fixo para campo de entrada
     input_container = st.container()
     
-    # Usar o container de entrada
+    # Campo de entrada de texto
     with input_container:
         user_input = st.text_input("💭 Sua pergunta:", key=f"user_input_{len(st.session_state.get('messages', []))}")
     
-    # Usar o container do chat para exibir mensagens
+    # Exibe histórico de mensagens
     with chat_container:
         if 'messages' in st.session_state:
             for msg in st.session_state.messages:
@@ -406,34 +487,47 @@ def display_chat_interface():
     return user_input
 
 def update_chat_history(user_input: str, assistant_response: Any):
+    """
+    Atualiza o histórico do chat com novas mensagens
+    Mantém conversas no estado da sessão
+    """
     if 'messages' not in st.session_state:
         st.session_state.messages = []
     
-    # Adicionar ao histórico
+    # Adiciona mensagens ao histórico
     st.session_state.messages.append({"role": "user", "content": user_input})
     st.session_state.messages.append({"role": "assistant", "content": assistant_response})
 
 def main():
+    """
+    Função principal do aplicativo
+    Gerencia todo o fluxo da aplicação
+    """
+    # Inicialização da interface
     init_page_config()
     apply_custom_css()
     create_sidebar()
     
+    # Título principal
     st.markdown('<h1 class="main-title">Chatbot com modelo de IA especializado em Português do Brasil - entrevista PDFs 📚</h1>', unsafe_allow_html=True)
     
+    # Campos de API em duas colunas
     col1, col2 = st.columns(2)
     with col1:
         maritaca_api_key = st.text_input("Chave API Maritaca:", type="password")
     with col2:
         huggingface_api_token = st.text_input("Token API Hugging Face:", type="password")
     
+    # Verifica chaves de API
     if not (maritaca_api_key and huggingface_api_token):
         st.warning("⚠️ Insira as chaves de API para continuar")
         return
     
-    # Configurar ambiente
+    # Configura ambiente com token Hugging Face
     os.environ["HUGGINGFACEHUB_API_TOKEN"] = huggingface_api_token
     
     try:
+        # Inicializa modelos de IA
         maritalk_model = MariTalk(key=maritaca_api_key, model="sabia-3")
         llm = MariTalkWrapper(maritalk_model)
         embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
@@ -441,17 +535,19 @@ def main():
         st.error(f"Erro ao inicializar modelos: {str(e)}")
         return
     
-    # Inicializar sessão se necessário
+    # Inicializa estado da sessão
     if 'store' not in st.session_state:
         st.session_state.store = {}
     if 'messages' not in st.session_state:
         st.session_state.messages = []
     
+    # ID da sessão e botão limpar
     col1, col2 = st.columns([3, 1])
     with col1:
         session_id = st.text_input("ID da Sessão:", value=datetime.now().strftime("%Y%m%d_%H%M%S"))
     with col2:
         if st.button("🗑️ Limpar Chat"):
+            # Limpa todos os dados da sessão
             for key in ['messages', 'documents', 'documents_processed', 'rag_chain']:
                 if key in st.session_state:
                     del st.session_state[key]
@@ -461,7 +557,7 @@ def main():
             st.success("Chat limpo com sucesso!")
             st.rerun()
     
-    # Upload de arquivos
+    # Upload de arquivos PDF
     uploaded_files = st.file_uploader(
         "Upload de PDFs:",
         type="pdf",
@@ -483,7 +579,7 @@ def main():
             st.session_state.documents = documents
             st.session_state.documents_processed = True
             
-            # Criar RAG chain logo após processar documentos
+            # Configura RAG chain
             try:
                 rag_chain = setup_rag_chain(documents, llm, embeddings)
                 st.session_state.rag_chain = rag_chain
@@ -494,11 +590,13 @@ def main():
                 return
     
     try:
+        # Configuração do histórico da sessão
         def get_session_history(session: str) -> BaseChatMessageHistory:
             if session not in st.session_state.store:
                 st.session_state.store[session] = ChatMessageHistory()
             return st.session_state.store[session]
         
+        # Criação da chain conversacional
         conversational_rag_chain = RunnableWithMessageHistory(
             st.session_state.rag_chain,
             get_session_history,
@@ -511,24 +609,26 @@ def main():
         st.error("Erro ao configurar o sistema")
         return
     
-    # Interface de chat com campo de entrada fixo
+    # Interface do chat
     user_input = display_chat_interface()
     
+    # Processamento da entrada do usuário
     if user_input:
         with st.spinner("🤔 Pensando..."):
             try:
+                # Gera resposta
                 response = conversational_rag_chain.invoke(
                     {"input": user_input},
                     config={"configurable": {"session_id": session_id}}
                 )
                 
+                # Logging da resposta
                 logger.info(f"Tipo da resposta: {type(response)}")
                 logger.info(f"Conteúdo da resposta: {str(response)[:200]}...")
                 
-                # Atualizar o histórico
+                # Atualiza históricos
                 update_chat_history(user_input, response)
                 
-                # Atualizar o histórico do LangChain
                 history = get_session_history(session_id)
                 history.add_user_message(user_input)
                 if isinstance(response, dict) and 'answer' in response:
@@ -536,12 +636,13 @@ def main():
                 else:
                     history.add_ai_message(str(response))
                 
-                # Forçar rerun para atualizar a interface
+                # Atualiza interface
                 st.rerun()
                     
             except Exception as e:
                 logger.error(f"Erro ao processar pergunta: {str(e)}", exc_info=True)
                 st.error(f"❌ Erro ao processar sua pergunta: {str(e)}")
 
+# Ponto de entrada do aplicativo
 if __name__ == "__main__":
     main()
