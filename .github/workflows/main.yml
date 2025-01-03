@@ -19,24 +19,33 @@ jobs:
           git config user.email github-actions@github.com
           git config pull.rebase false
       
-      - name: Fetch from hub
+      - name: Initialize if needed
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: git fetch https://reichaves:$HF_TOKEN@huggingface.co/spaces/reichaves/Chatbot-with-MaritacaAI-for-PDFs main
-
-      - name: Merge changes
         run: |
-          git merge FETCH_HEAD --allow-unrelated-histories -m "Merge Hugging Face changes"
-        continue-on-error: true
-
-      - name: Check for merge conflicts
+          if ! git remote | grep -q "hf"; then
+            git remote add hf https://reichaves:$HF_TOKEN@huggingface.co/spaces/reichaves/Chatbot-with-MaritacaAI-for-PDFs
+          fi
+      
+      - name: Attempt sync
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          if git ls-files -u | grep -q '^'; then
-            echo "Merge conflicts detected. Please resolve them manually."
-            exit 1
+          # Fetch from Hugging Face
+          git fetch hf main || true
+          
+          # Try to merge
+          if git merge hf/main --allow-unrelated-histories -m "Merge Hugging Face changes" ; then
+            echo "Merge successful"
+          else
+            echo "Merge failed, using local version"
+            git merge --abort
+            # Force push local version
+            git push -f hf main
           fi
 
-      - name: Push to hub
+      - name: Push to Hugging Face
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: git push https://reichaves:$HF_TOKEN@huggingface.co/spaces/reichaves/Chatbot-with-MaritacaAI-for-PDFs main
+        run: |
+          git push hf main || git push -f hf main
