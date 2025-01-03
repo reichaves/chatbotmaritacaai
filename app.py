@@ -4,7 +4,7 @@
 # usando Streamlit, LangChain, e modelos de linguagem de grande escala - para entrevistar PDFs
 # Geração de respostas usando o modelo sabia-3 da Maritaca AI especializado em Português do Brasil
 # Embeddings de texto usando o modelo all-MiniLM-L6-v2 do Hugging Face
-###
+##
 
 
 import streamlit as st
