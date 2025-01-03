@@ -14,7 +14,7 @@ pinned: false
 [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/reichaves/Chatbot-with-MaritacaAI-for-PDFs)
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://chatbotmaritacaai-jkiyzmcjcuvduw5dzymwu5.streamlit.app/)
 
-Este projeto implementa um sistema de Recuperação de Informações Aumentada por Geração (RAG) conversacional usando Streamlit, LangChain, e modelos de linguagem de grande escala. O aplicativo permite que os usuários façam upload de documentos PDF, façam perguntas sobre o conteúdo desses documentos, e mantenham um histórico de chat para contexto em conversas contínuas.
+Este projeto implementa um sistema de Recuperação de Informações Aumentada por Geração (RAG) conversacional usando Streamlit, LangChain, e modelos de linguagem de grande escala da MaritacaAI. O aplicativo permite que os usuários façam upload de documentos PDF, façam perguntas sobre o conteúdo desses documentos, e mantenham um histórico de chat para contexto em conversas contínuas.
 
 ## Autor
 
@@ -47,8 +47,8 @@ Reinaldo Chaves (reichaves@gmail.com)
 
 1. Clone este repositório:
    ```
-   git clone https://github.com/reichaves/rag_chat_llama3.git
-   cd rag_chat_llama3
+   git clone https://github.com/reichaves/chatbotmaritacaai.git
+   cd chatbotmaritacaai
    ```
 
 2. Instale as dependências:
@@ -120,6 +120,6 @@ Se você usar este projeto em sua pesquisa ou aplicação, por favor cite:
   author = {Reinaldo Chaves},
   title = {Chatbot with MaritacaAI for PDFs},
   year = {2024},
-  url = {https://github.com/reichaves/rag_chat_llama3}
+  url = {https://github.com/reichaves/chatbotmaritacaai/}
 }
 ```
