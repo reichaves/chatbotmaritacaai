@@ -222,7 +222,7 @@ def create_sidebar():
     Este projeto não se responsabiliza pelos conteúdos criados a partir deste site.
 
     **Sobre este app**
-    Este aplicativo foi desenvolvido por Reinaldo Chaves. Para mais informações, contribuições e feedback, visite o [repositório](https://github.com/reichaves/rag_chat_llama3)
+    Este aplicativo foi desenvolvido por Reinaldo Chaves. Para mais informações, contribuições e feedback, visite o [repositório](https://github.com/reichaves/chatbotmaritacaai)
     """)
 
 def display_chat_message(message: str, is_user: bool):
