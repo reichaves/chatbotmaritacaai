@@ -528,7 +528,7 @@ def main():
     
     try:
         # Inicializa modelos de IA
-        maritalk_model = MariTalk(key=maritaca_api_key, model="sabia-3", temperature=0)
+        maritalk_model = MariTalk(key=maritaca_api_key, model="sabia-3")
         llm = MariTalkWrapper(maritalk_model)
         embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
     except Exception as e:
