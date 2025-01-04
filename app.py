@@ -170,190 +170,201 @@ def init_page_config():
 
 def apply_custom_css():
     """
-    Aplica estilos CSS modernos e profissionais à interface
-    Utiliza um esquema de cores consistente e design contemporâneo
+    Aplica estilos CSS personalizados à interface.
+    Compatível com Streamlit e HuggingFace.
     """
     st.markdown("""
     <style>
-    /* Variáveis CSS para tema consistente */
-    :root {
-        --primary-color: #2D7FF9;         /* Azul principal */
-        --secondary-color: #06D6A0;       /* Verde água para acentos */
-        --background-main: #111827;       /* Fundo principal escuro */
-        --background-light: #1F2937;      /* Fundo secundário */
-        --text-primary: #F9FAFB;          /* Texto principal */
-        --text-secondary: #D1D5DB;        /* Texto secundário */
-        --accent-color: #818CF8;          /* Cor de destaque */
-        --error-color: #EF4444;           /* Vermelho para erros */
-        --success-color: #10B981;         /* Verde para sucesso */
-    }
-
-    /* Reset e estilos base */
+    /* Base */
     .stApp {
-        background-color: var(--background-main);
-        color: var(--text-primary);
+        max-width: 100%;
+        padding-top: 2rem;
+        background-color: #0e1117;
     }
 
-    /* Título principal e cabeçalhos */
-    .main-title {
-        background: linear-gradient(120deg, var(--primary-color), var(--secondary-color));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-size: 2.5em;
-        font-weight: 800;
-        margin-bottom: 1.5rem;
-        padding: 0.5rem 0;
+    /* Headers */
+    h1 {
+        color: #ff8c00 !important;
+        font-size: 32px !important;
+        font-weight: 600 !important;
+        padding: 0.5rem 0 !important;
     }
 
-    h1, h2, h3 {
-        color: var(--text-primary);
-        font-weight: 600;
+    h2, h3 {
+        color: #fafafa !important;
+        padding: 0.5rem 0 !important;
     }
 
-    /* Container do Chat */
-    .chat-message {
-        padding: 1.25rem;
-        border-radius: 0.75rem;
-        margin-bottom: 1rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        background-color: var(--background-light);
+    /* Text and Links */
+    p, li {
+        color: #fafafa;
     }
 
-    /* Mensagens do usuário vs assistente */
-    .user-message {
-        background: linear-gradient(145deg, #1a237e15, #1a237e25);
-        border-left: 4px solid var(--primary-color);
-    }
-
-    .assistant-message {
-        background: linear-gradient(145deg, #00695c15, #00695c25);
-        border-left: 4px solid var(--secondary-color);
-    }
-
-    /* Cabeçalho das mensagens */
-    .chat-header {
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: 0.75rem;
-        font-size: 1.1em;
-    }
-
-    /* Conteúdo das mensagens */
-    .chat-content {
-        color: var(--text-secondary);
-        line-height: 1.6;
-        font-size: 1em;
-    }
-
-    .chat-content em {
-        display: block;
-        margin-top: 1rem;
-        padding-top: 0.75rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        color: var(--text-secondary);
-        font-style: italic;
-    }
-
-    /* Botões e Interações */
-    .stButton > button {
-        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 0.5rem 1.5rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-
-    .stButton > button:hover {
-        opacity: 0.9;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Campos de entrada */
-    .stTextInput > div > div > input {
-        background-color: var(--background-light);
-        color: var(--text-primary);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-        padding: 0.75rem;
-        transition: all 0.3s ease;
-    }
-
-    .stTextInput > div > div > input:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 2px rgba(45, 127, 249, 0.2);
-    }
-
-    /* Upload de arquivos */
-    .stUploadedFileData {
-        background-color: var(--background-light) !important;
-        color: var(--text-primary) !important;
-        border-radius: 8px;
-        padding: 1rem;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    /* Barra de progresso */
-    .stProgress > div > div > div > div {
-        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-    }
-
-    /* Alertas e mensagens */
-    .stAlert {
-        background-color: var(--background-light);
-        color: var(--text-primary);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-        padding: 1rem;
-    }
-
-    /* Info icon e tooltips */
-    .stTooltipIcon {
-        color: var(--primary-color) !important;
-    }
-
-    /* Efeitos de hover em links */
     a {
-        color: var(--primary-color);
+        color: #4c8bf5 !important;
         text-decoration: none;
-        transition: all 0.2s ease;
     }
 
     a:hover {
-        color: var(--secondary-color);
         text-decoration: underline;
     }
 
-    /* Token info */
-    .token-info {
-        color: var(--text-secondary);
-        font-size: 0.9em;
-        margin-top: 1rem;
-        padding-top: 0.75rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    /* Chat Messages */
+    .chat-message {
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+        background-color: #1a1c23;
     }
 
-    /* Removendo elementos desnecessários */
-    div[data-testid="stToolbar"], .stDeployButton {
+    .user-message {
+        border-left: 4px solid #4c8bf5;
+    }
+
+    .assistant-message {
+        border-left: 4px solid #00cc89;
+    }
+
+    .chat-header {
+        color: #fafafa;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .chat-content {
+        color: #fafafa;
+        line-height: 1.5;
+        margin-left: 0.5rem;
+    }
+
+    /* Code Blocks */
+    code {
+        background-color: #262730;
+        padding: 0.2em 0.4em;
+        border-radius: 3px;
+        font-size: 85%;
+        color: #ff8c00;
+    }
+
+    pre {
+        background-color: #262730;
+        padding: 1rem;
+        border-radius: 5px;
+        overflow-x: auto;
+    }
+
+    /* Input Elements */
+    .stTextInput > div > div > input {
+        background-color: #262730;
+        color: #fafafa;
+        border: 1px solid #4c4c4c;
+    }
+
+    .stTextInput > div > div > input:focus {
+        border-color: #4c8bf5;
+        box-shadow: 0 0 0 1px #4c8bf5;
+    }
+
+    /* Buttons */
+    .stButton > button {
+        background-color: #262730;
+        color: #4c8bf5;
+        border: 1px solid #4c8bf5;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+
+    .stButton > button:hover {
+        background-color: #4c8bf5;
+        color: #ffffff;
+    }
+
+    /* File Uploader */
+    .stUploadedFileData {
+        background-color: #262730 !important;
+        color: #fafafa !important;
+        padding: 1rem !important;
+        border-radius: 0.5rem !important;
+    }
+
+    /* Progress Bar */
+    .stProgress > div > div > div > div {
+        background-color: #4c8bf5;
+    }
+
+    /* Alerts and Messages */
+    .stAlert {
+        background-color: #262730;
+        color: #fafafa;
+        padding: 1rem;
+        border-radius: 0.5rem;
+    }
+
+    /* Info icon */
+    .stTooltipIcon {
+        color: #4c8bf5 !important;
+    }
+
+    /* Token Information */
+    .token-info {
+        color: #808080;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid #4c4c4c;
+    }
+
+    /* Hide elements */
+    div[data-testid="stToolbar"], 
+    .stDeployButton {
         display: none;
     }
 
-    /* Ajustes gerais de espaçamento e alinhamento */
-    .stMarkdown {
-        line-height: 1.6;
+    /* Success/Warning/Error Colors */
+    .success {
+        color: #00cc89;
     }
 
-    /* Ajustes para telas menores */
-    @media (max-width: 768px) {
-        .main-title {
-            font-size: 2em;
-        }
+    .warning {
+        color: #ff8c00;
+    }
 
+    .error {
+        color: #ff4c4c;
+    }
+
+    /* Scrollbars */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #1a1c23;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #4c4c4c;
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #666666;
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
         .chat-message {
             padding: 1rem;
+        }
+
+        h1 {
+            font-size: 24px !important;
         }
     }
     </style>
@@ -611,8 +622,10 @@ def main():
     apply_custom_css()
     create_sidebar()
     
-    # Título principal
-    st.markdown('<h1 class="main-title">Chatbot com modelo de IA especializado em Português do Brasil - entrevista PDFs 📚</h1>', unsafe_allow_html=True)
+    # Título principal - Nova implementação
+    st.markdown("""
+    # 📚 Chatbot com modelo de IA especializado em Português do Brasil - entrevista PDFs
+    """)
     
     # Campos de API em duas colunas
     col1, col2 = st.columns(2)
