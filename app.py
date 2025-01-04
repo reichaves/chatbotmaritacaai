@@ -379,6 +379,7 @@ def create_sidebar():
     st.sidebar.markdown("""
     * Se encontrar erros de processamento, reinicie com F5. Utilize arquivos .PDF com textos não digitalizados como imagens.
     * Para recomeçar uma nova sessão pressione F5.
+    * As respostas que o modelo de IA sabia-3 encontrar vão estar no campo 'answer'. As demais informações detalham quantos tokens foram gastos na sua conta.
 
     **Obtenção de chaves de API:**
     * Você pode fazer uma conta na MaritacaAI e obter uma chave de API [aqui](https://plataforma.maritaca.ai/)
