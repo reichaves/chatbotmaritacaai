@@ -14,25 +14,25 @@ pinned: false
 [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/reichaves/Chatbot-with-MaritacaAI-for-PDFs)
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://chatbotmaritacaai-jkiyzmcjcuvduw5dzymwu5.streamlit.app/)
 
-Este projeto implementa um sistema de Recuperação de Informações Aumentada por Geração (RAG) conversacional usando Streamlit, LangChain, e modelos de linguagem de grande escala da [MaritacaAI](https://www.maritaca.ai/) - startup brasileira focada em especializar modelos de linguagem para certos domínios e idiomas - especializada no Português Brasileiro. O aplicativo permite que os usuários façam upload de documentos PDF, façam perguntas sobre o conteúdo desses documentos, e mantenham um histórico de chat para contexto em conversas contínuas.
+This project implements a conversational Retrieval-Augmented Generation (RAG) system using Streamlit, LangChain, and large language models from [MaritacaAI](https://www.maritaca.ai/) - a Brazilian startup focused on specializing language models for specific domains and languages - specialized in Brazilian Portuguese. The application allows users to upload PDF documents, ask questions about their content, and maintain a chat history for context in ongoing conversations.
 
-## Autor
+## Author
 
 Reinaldo Chaves (reichaves@gmail.com)
 
-## Características
+## Features
 
-- Interface de usuário Streamlit com tema dark e layout responsivo
-- Upload e processamento de múltiplos arquivos PDF
-- Processamento de documentos usando LangChain e FAISS
-- Geração de respostas usando o modelo sabia-3 da Maritaca AI especializado em Português do Brasil
-- Embeddings de texto usando o modelo all-MiniLM-L6-v2 do Hugging Face
-- Histórico de chat persistente para manter o contexto da conversa
-- Barra lateral com orientações importantes para o usuário
-- Contagem de tokens por resposta
-- Formatação especial para documentos jurídicos e pedidos LAI
+- Streamlit user interface with dark theme and responsive layout
+- Upload and processing of multiple PDF files
+- Document processing using LangChain and FAISS
+- Answer generation using MaritacaAI's sabia-3 model specialized in Brazilian Portuguese
+- Text embeddings using Hugging Face's all-MiniLM-L6-v2 model
+- Persistent chat history to maintain conversation context
+- Sidebar with important user guidelines
+- Token count per response
+- Special formatting for legal documents and FOI (Freedom of Information) requests
 
-## Requisitos
+## Requirements
 
 - Python 3.7+
 - Streamlit
@@ -41,79 +41,79 @@ Reinaldo Chaves (reichaves@gmail.com)
 - PyPDF2
 - MaritalkAI
 - HuggingFace Embeddings
-- Outras dependências listadas em `requirements.txt`
+- Other dependencies listed in `requirements.txt`
 
-## Instalação
+## Installation
 
-1. Clone este repositório:
+1. Clone this repository:
    ```
    git clone https://github.com/reichaves/chatbotmaritacaai.git
    cd chatbotmaritacaai
    ```
 
-2. Instale as dependências:
+2. Install dependencies:
    ```
    pip install streamlit langchain langchain_huggingface maritalk faiss-cpu tenacity cachetools
    ```
 
-3. Configure as chaves de API necessárias:
-   - Chave da API Maritaca AI (https://plataforma.maritaca.ai/)
-   - Token da API Hugging Face (https://huggingface.co/docs/hub/security-tokens)
+3. Configure the necessary API keys:
+   - Maritaca AI API key (https://plataforma.maritaca.ai/)
+   - Hugging Face API token (https://huggingface.co/docs/hub/security-tokens)
 
-## Uso
+## Usage
 
-1. Execute o aplicativo Streamlit:
+1. Run the Streamlit application:
    ```
    streamlit run app.py
    ```
 
-2. Abra o navegador e acesse o endereço local mostrado no terminal.
-3. Insira suas chaves de API quando solicitado.
-4. Faça upload de um ou mais arquivos PDF.
-5. Faça perguntas sobre o conteúdo dos documentos na caixa de entrada de texto.
+2. Open your browser and access the local address shown in the terminal.
+3. Enter your API keys when prompted.
+4. Upload one or more PDF files.
+5. Ask questions about the documents' content in the text input box.
 
-## Como funciona
+## How it Works
 
-1. **Upload de Documentos**: Os usuários fazem upload de arquivos PDF, que são processados e divididos em chunks menores.
-2. **Criação de Embeddings**: O texto é convertido em embeddings usando o modelo all-MiniLM-L6-v2 do Hugging Face.
-3. **Armazenamento de Vetores**: Os embeddings são armazenados em um banco de dados FAISS para recuperação eficiente.
-4. **Processamento de Perguntas**: As perguntas dos usuários são contextualizadas com base no histórico do chat.
-5. **Recuperação de Informações**: O sistema recupera os chunks de texto mais relevantes com base na pergunta.
-6. **Geração de Respostas**: O modelo sabia-3 da Maritaca AI gera uma resposta em Português do Brasil com base nos chunks recuperados e na pergunta.
-7. **Manutenção do Histórico**: O histórico do chat é mantido para fornecer contexto em conversas contínuas.
+1. **Document Upload**: Users upload PDF files, which are processed and split into smaller chunks.
+2. **Embedding Creation**: The text is converted into embeddings using Hugging Face's all-MiniLM-L6-v2 model.
+3. **Vector Storage**: Embeddings are stored in a FAISS database for efficient retrieval.
+4. **Question Processing**: User questions are contextualized based on chat history.
+5. **Information Retrieval**: The system retrieves the most relevant text chunks based on the question.
+6. **Answer Generation**: MaritacaAI's sabia-3 model generates an answer in Brazilian Portuguese based on the retrieved chunks and question.
+7. **History Maintenance**: Chat history is maintained to provide context in ongoing conversations.
 
-## Funcionalidades Especiais
+## Special Features
 
-- Formatação especial para análise de documentos jurídicos
-- Processamento detalhado de documentos da Lei de Acesso à Informação (LAI)
-- Sistema de cache para melhor performance
-- Tratamento de erros robusto
-- Interface adaptativa que mantém o contexto da conversa
+- Special formatting for legal document analysis
+- Detailed processing of Freedom of Information (FOI) documents
+- Cache system for better performance
+- Robust error handling
+- Adaptive interface that maintains conversation context
 
-## Avisos Importantes
+## Important Notices
 
-- Não compartilhe documentos contendo informações sensíveis ou confidenciais
-- As respostas geradas pela IA podem conter erros ou imprecisões
-- Sempre verifique as informações com as fontes originais
-- Este projeto é para fins educacionais e de demonstração
-- Use com responsabilidade e em conformidade com as políticas de uso das APIs
+- Do not share documents containing sensitive or confidential information
+- AI-generated responses may contain errors or inaccuracies
+- Always verify information with original sources
+- This project is for educational and demonstration purposes
+- Use responsibly and in compliance with API usage policies
 
-## Contribuições
+## Contributions
 
-Contribuições são bem-vindas! Por favor:
-1. Faça um fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
+Contributions are welcome! Please:
+1. Fork the project
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## Licença
+## License
 
 [MIT License](LICENSE)
 
-## Citação
+## Citation
 
-Se você usar este projeto em sua pesquisa ou aplicação, por favor cite:
+If you use this project in your research or application, please cite:
 
 ```
 @software{chatbot-maritacaai-pdfs,
