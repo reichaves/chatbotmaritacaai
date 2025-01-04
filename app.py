@@ -171,7 +171,7 @@ def init_page_config():
 def apply_custom_css():
     """
     Aplica estilos CSS personalizados à interface
-    Define cores, formatos e layout dos elementos
+    Define cores, formatos e layout dos elementos, incluindo o tema dark para a sidebar
     """
     st.markdown("""
     <style>
@@ -179,6 +179,43 @@ def apply_custom_css():
     .stApp {
         background-color: #0e1117;
         color: #fafafa;
+    }
+    
+    /* Estilos da Sidebar */
+    .css-1d391kg {
+        background-color: #0e1117;
+    }
+    
+    .css-1lecfge {
+        color: #fafafa;
+    }
+    
+    .sidebar .sidebar-content {
+        background-color: #0e1117 !important;
+    }
+    
+    /* Cabeçalhos da Sidebar */
+    .sidebar .sidebar-content h1,
+    .sidebar .sidebar-content h2,
+    .sidebar .sidebar-content h3 {
+        color: #fafafa !important;
+    }
+    
+    /* Links da Sidebar */
+    .sidebar .sidebar-content a {
+        color: #4F8BF9 !important;
+    }
+    
+    /* Texto da Sidebar */
+    .sidebar .sidebar-content .stMarkdown {
+        color: #fafafa !important;
+    }
+    
+    /* Widgets da Sidebar */
+    .sidebar .sidebar-content .stSelectbox,
+    .sidebar .sidebar-content .stTextInput {
+        background-color: #262730 !important;
+        color: #fafafa !important;
     }
     
     /* Formatação das mensagens do chat */
@@ -190,9 +227,11 @@ def apply_custom_css():
         flex-direction: column;
         width: 100%;
     }
+    
     .user-message {
         background-color: #2e2e2e;
     }
+    
     .assistant-message {
         background-color: #1e1e1e;
     }
@@ -202,10 +241,12 @@ def apply_custom_css():
         font-weight: bold;
         margin-bottom: 0.5rem;
     }
+    
     .chat-content {
         margin-left: 1rem;
         white-space: pre-line;
     }
+    
     .chat-content em {
         color: #888;
         font-size: 0.9em;
@@ -222,6 +263,8 @@ def apply_custom_css():
         font-weight: bold;
         margin-bottom: 30px;
     }
+    
+    /* Botões */
     .stButton > button {
         background-color: #262730;
         color: #4F8BF9;
@@ -229,10 +272,23 @@ def apply_custom_css():
         padding: 10px 20px;
     }
     
+    .stButton > button:hover {
+        background-color: #363840;
+        border-color: #4F8BF9;
+    }
+    
+    /* Input fields */
+    .stTextInput > div > div > input {
+        background-color: #262730;
+        color: #fafafa;
+        border-color: #4F8BF9;
+    }
+    
     /* Esconde elementos desnecessários */
     div[data-testid="stToolbar"] {
         display: none;
     }
+    
     .stDeployButton {
         display: none;
     }
@@ -244,6 +300,40 @@ def apply_custom_css():
         margin-top: 10px;
         padding-top: 8px;
         border-top: 1px solid #444;
+    }
+    
+    /* Override para garantir visibilidade do texto na sidebar */
+    .sidebar .sidebar-content * {
+        color: #fafafa !important;
+    }
+    
+    /* Estilo para links na sidebar quando hover */
+    .sidebar .sidebar-content a:hover {
+        color: #6F9BFF !important;
+        text-decoration: underline;
+    }
+    
+    /* Ajuste para elementos de upload */
+    .stUploadedFileData {
+        background-color: #262730 !important;
+        color: #fafafa !important;
+        border-color: #4F8BF9 !important;
+    }
+    
+    /* Ajuste para elementos de progresso */
+    .stProgress > div > div > div > div {
+        background-color: #4F8BF9 !important;
+    }
+    
+    /* Ajuste para tooltips */
+    .stTooltipIcon {
+        color: #4F8BF9 !important;
+    }
+    
+    /* Ajuste para mensagens de aviso/erro */
+    .stAlert {
+        background-color: #262730 !important;
+        color: #fafafa !important;
     }
     </style>
     """, unsafe_allow_html=True)
