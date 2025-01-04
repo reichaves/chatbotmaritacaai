@@ -559,7 +559,7 @@ def main():
     
     # Upload de arquivos PDF
     uploaded_files = st.file_uploader(
-        "Upload de PDFs:",
+        "Upload de PDFs (aguarde o processamento - até aparecer o campo para você digitar perguntas):",
         type="pdf",
         accept_multiple_files=True,
         help="Selecione um ou mais arquivos PDF"
