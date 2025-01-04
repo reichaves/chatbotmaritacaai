@@ -514,9 +514,9 @@ def main():
     # Campos de API em duas colunas
     col1, col2 = st.columns(2)
     with col1:
-        maritaca_api_key = st.text_input("Chave API Maritaca:", type="password")
+        maritaca_api_key = st.text_input("Chave API Maritaca (pressione Enter após digitar):", type="password")
     with col2:
-        huggingface_api_token = st.text_input("Token API Hugging Face:", type="password")
+        huggingface_api_token = st.text_input("Token API Hugging Face (pressione Enter após digitar):", type="password")
     
     # Verifica chaves de API
     if not (maritaca_api_key and huggingface_api_token):
