@@ -170,170 +170,191 @@ def init_page_config():
 
 def apply_custom_css():
     """
-    Aplica estilos CSS personalizados à interface
-    Define cores, formatos e layout dos elementos, incluindo o tema dark para a sidebar
+    Aplica estilos CSS modernos e profissionais à interface
+    Utiliza um esquema de cores consistente e design contemporâneo
     """
     st.markdown("""
     <style>
-    /* Estilo global e tema dark */
+    /* Variáveis CSS para tema consistente */
+    :root {
+        --primary-color: #2D7FF9;         /* Azul principal */
+        --secondary-color: #06D6A0;       /* Verde água para acentos */
+        --background-main: #111827;       /* Fundo principal escuro */
+        --background-light: #1F2937;      /* Fundo secundário */
+        --text-primary: #F9FAFB;          /* Texto principal */
+        --text-secondary: #D1D5DB;        /* Texto secundário */
+        --accent-color: #818CF8;          /* Cor de destaque */
+        --error-color: #EF4444;           /* Vermelho para erros */
+        --success-color: #10B981;         /* Verde para sucesso */
+    }
+
+    /* Reset e estilos base */
     .stApp {
-        background-color: #0e1117;
-        color: #fafafa;
+        background-color: var(--background-main);
+        color: var(--text-primary);
     }
-    
-    /* Estilos da Sidebar */
-    .css-1d391kg {
-        background-color: #0e1117;
-    }
-    
-    .css-1lecfge {
-        color: #fafafa;
-    }
-    
-    .sidebar .sidebar-content {
-        background-color: #0e1117 !important;
-    }
-    
-    /* Cabeçalhos da Sidebar */
-    .sidebar .sidebar-content h1,
-    .sidebar .sidebar-content h2,
-    .sidebar .sidebar-content h3 {
-        color: #fafafa !important;
-    }
-    
-    /* Links da Sidebar */
-    .sidebar .sidebar-content a {
-        color: #4F8BF9 !important;
-    }
-    
-    /* Texto da Sidebar */
-    .sidebar .sidebar-content .stMarkdown {
-        color: #fafafa !important;
-    }
-    
-    /* Widgets da Sidebar */
-    .sidebar .sidebar-content .stSelectbox,
-    .sidebar .sidebar-content .stTextInput {
-        background-color: #262730 !important;
-        color: #fafafa !important;
-    }
-    
-    /* Formatação das mensagens do chat */
-    .chat-message {
-        padding: 1rem;
-        border-radius: 0.5rem;
-        margin-bottom: 1rem;
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-    }
-    
-    .user-message {
-        background-color: #2e2e2e;
-    }
-    
-    .assistant-message {
-        background-color: #1e1e1e;
-    }
-    
-    /* Elementos do chat */
-    .chat-header {
-        font-weight: bold;
-        margin-bottom: 0.5rem;
-    }
-    
-    .chat-content {
-        margin-left: 1rem;
-        white-space: pre-line;
-    }
-    
-    .chat-content em {
-        color: #888;
-        font-size: 0.9em;
-        display: block;
-        margin-top: 10px;
-        border-top: 1px solid #444;
-        padding-top: 8px;
-    }
-    
-    /* Elementos da interface */
+
+    /* Título principal e cabeçalhos */
     .main-title {
-        color: #FFA500;
+        background: linear-gradient(120deg, var(--primary-color), var(--secondary-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
         font-size: 2.5em;
-        font-weight: bold;
-        margin-bottom: 30px;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+        padding: 0.5rem 0;
     }
-    
-    /* Botões */
-    .stButton > button {
-        background-color: #262730;
-        color: #4F8BF9;
-        border-radius: 20px;
-        padding: 10px 20px;
+
+    h1, h2, h3 {
+        color: var(--text-primary);
+        font-weight: 600;
     }
-    
-    .stButton > button:hover {
-        background-color: #363840;
-        border-color: #4F8BF9;
+
+    /* Container do Chat */
+    .chat-message {
+        padding: 1.25rem;
+        border-radius: 0.75rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background-color: var(--background-light);
     }
-    
-    /* Input fields */
-    .stTextInput > div > div > input {
-        background-color: #262730;
-        color: #fafafa;
-        border-color: #4F8BF9;
+
+    /* Mensagens do usuário vs assistente */
+    .user-message {
+        background: linear-gradient(145deg, #1a237e15, #1a237e25);
+        border-left: 4px solid var(--primary-color);
     }
-    
-    /* Esconde elementos desnecessários */
-    div[data-testid="stToolbar"] {
-        display: none;
+
+    .assistant-message {
+        background: linear-gradient(145deg, #00695c15, #00695c25);
+        border-left: 4px solid var(--secondary-color);
     }
-    
-    .stDeployButton {
-        display: none;
+
+    /* Cabeçalho das mensagens */
+    .chat-header {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.75rem;
+        font-size: 1.1em;
     }
-    
-    /* Informações de tokens */
-    .token-info {
+
+    /* Conteúdo das mensagens */
+    .chat-content {
+        color: var(--text-secondary);
+        line-height: 1.6;
+        font-size: 1em;
+    }
+
+    .chat-content em {
+        display: block;
+        margin-top: 1rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--text-secondary);
         font-style: italic;
-        color: #888;
-        margin-top: 10px;
-        padding-top: 8px;
-        border-top: 1px solid #444;
     }
-    
-    /* Override para garantir visibilidade do texto na sidebar */
-    .sidebar .sidebar-content * {
-        color: #fafafa !important;
+
+    /* Botões e Interações */
+    .stButton > button {
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.5rem 1.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
     }
-    
-    /* Estilo para links na sidebar quando hover */
-    .sidebar .sidebar-content a:hover {
-        color: #6F9BFF !important;
+
+    .stButton > button:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Campos de entrada */
+    .stTextInput > div > div > input {
+        background-color: var(--background-light);
+        color: var(--text-primary);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 0.75rem;
+        transition: all 0.3s ease;
+    }
+
+    .stTextInput > div > div > input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(45, 127, 249, 0.2);
+    }
+
+    /* Upload de arquivos */
+    .stUploadedFileData {
+        background-color: var(--background-light) !important;
+        color: var(--text-primary) !important;
+        border-radius: 8px;
+        padding: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Barra de progresso */
+    .stProgress > div > div > div > div {
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    }
+
+    /* Alertas e mensagens */
+    .stAlert {
+        background-color: var(--background-light);
+        color: var(--text-primary);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 1rem;
+    }
+
+    /* Info icon e tooltips */
+    .stTooltipIcon {
+        color: var(--primary-color) !important;
+    }
+
+    /* Efeitos de hover em links */
+    a {
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    a:hover {
+        color: var(--secondary-color);
         text-decoration: underline;
     }
-    
-    /* Ajuste para elementos de upload */
-    .stUploadedFileData {
-        background-color: #262730 !important;
-        color: #fafafa !important;
-        border-color: #4F8BF9 !important;
+
+    /* Token info */
+    .token-info {
+        color: var(--text-secondary);
+        font-size: 0.9em;
+        margin-top: 1rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
-    
-    /* Ajuste para elementos de progresso */
-    .stProgress > div > div > div > div {
-        background-color: #4F8BF9 !important;
+
+    /* Removendo elementos desnecessários */
+    div[data-testid="stToolbar"], .stDeployButton {
+        display: none;
     }
-    
-    /* Ajuste para tooltips */
-    .stTooltipIcon {
-        color: #4F8BF9 !important;
+
+    /* Ajustes gerais de espaçamento e alinhamento */
+    .stMarkdown {
+        line-height: 1.6;
     }
-    
-    /* Ajuste para mensagens de aviso/erro */
-    .stAlert {
-        background-color: #262730 !important;
-        color: #fafafa !important;
+
+    /* Ajustes para telas menores */
+    @media (max-width: 768px) {
+        .main-title {
+            font-size: 2em;
+        }
+
+        .chat-message {
+            padding: 1rem;
+        }
     }
     </style>
     """, unsafe_allow_html=True)
