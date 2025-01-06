@@ -11,6 +11,8 @@ pinned: false
 
 # Chatbot with MaritacaAI for PDFs
 
+[Leia este README em Português](README.pt.md)
+
 [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/reichaves/Chatbot-with-MaritacaAI-for-PDFs)
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://chatbotmaritacaai-jkiyzmcjcuvduw5dzymwu5.streamlit.app/)
 
